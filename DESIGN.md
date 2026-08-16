@@ -56,12 +56,16 @@ it free, fast, and essentially unbreakable.
   entries and every edit touches the same file. The per-file layout costs nothing
   because the build concatenates them anyway.
 
-### Prerequisite: Node
+### Node
 
-This machine has no Node and no Homebrew. Building locally needs Node 20+. Easiest
-path is the official macOS installer from nodejs.org, or `nvm`. (GitHub Actions has
-its own Node, so deploys would work regardless — but you'd be editing blind without a
-local dev server, which is not a workflow I'd recommend.)
+**Installed:** Node 24.19.0 (LTS) at `~/.local/node`, from the official nodejs.org
+tarball with its SHA256 verified against the published manifest. There's no Homebrew
+on this machine, so it was extracted into the home directory rather than installed
+system-wide — no `sudo`, and nothing outside `~/.local`. `~/.zshrc` puts it on `PATH`.
+
+To remove it later: delete `~/.local/node` and the two `PATH` lines from `~/.zshrc`.
+
+Node 24 runs TypeScript directly, so `scripts/*.ts` need no `tsx` or `ts-node`.
 
 ---
 
@@ -399,12 +403,17 @@ logic to unit-test, and the validator covers the failure mode that actually occu
 | Coordinate fuzzing | **No** — round by hand if ever needed |
 | Entry scaffolding | **Yes** — `npm run new-entry` |
 
+| Node | **Installed** — 24.19.0 LTS in `~/.local/node` |
+| Dropbox | **`.dropboxignore`** for `node_modules`, `dist`, `.git`, `.vite` |
+
+The Dropbox exclusion was written before the first `npm install`, so those directories
+never synced. The same paths also carry the `com.dropbox.ignored` extended attribute,
+which is the mechanism the desktop client honours directly — belt and braces, since
+silent `.git` corruption is expensive and the fix is free.
+
+**One consequence:** `.git/` is no longer backed up by Dropbox. Until you push to
+GitHub, this repo's history exists in exactly one place.
+
 **Still open:**
 
-1. **Install Node locally?** Needed for a dev server. Actions has its own Node so
-   deploys work either way, but authoring without a local preview is a bad loop. No
-   Homebrew on this machine — the nodejs.org macOS installer is the shortest path.
-2. **Dropbox + git.** This folder syncs to Dropbox, which syncing `.git/` and
-   `node_modules/` mid-write can corrupt, and it's slow. Options: a `.dropboxignore`
-   listing `node_modules`, `dist`, `.git`; or keep the working copy outside Dropbox
-   and let GitHub be the backup. Worth resolving before the first `npm install`.
+1. **Nothing blocking.** Push to GitHub and enable Pages — see §8 and the README.
