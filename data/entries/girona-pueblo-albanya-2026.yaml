@@ -19,8 +19,8 @@ place:
   country: Spain
   country_code: ES
 
-# rating: 4
-# tags: [river, swimming, quiet]
+rating: 4
+tags: [river, swimming, quiet]
 
 media:
   - file: 01-river-valley.jpg

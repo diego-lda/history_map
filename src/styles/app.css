@@ -319,7 +319,9 @@ body {
 }
 
 .panel__rating-empty {
-  color: var(--border);
+  /* --border is ~1.2:1 on white, which made unfilled stars invisible and a
+     3/5 read as "three stars". */
+  color: #b9bec7;
 }
 
 .panel__section {

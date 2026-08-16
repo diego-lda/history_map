@@ -99,7 +99,9 @@ export default function EntryPanel({ entry, onClose }: Props) {
             <p className="panel__rating" aria-label={`Rated ${entry.rating} out of 5`}>
               <span aria-hidden="true">
                 {'★'.repeat(entry.rating)}
-                <span className="panel__rating-empty">{'★'.repeat(5 - entry.rating)}</span>
+                {/* Outline glyph, not a faint filled one — a pale ★ reads as a
+                    rendering glitch rather than as an unfilled star. */}
+                <span className="panel__rating-empty">{'☆'.repeat(5 - entry.rating)}</span>
               </span>
             </p>
           )}
