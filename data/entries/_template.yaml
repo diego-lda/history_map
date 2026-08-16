@@ -1,0 +1,44 @@
+# Copy this file to data/entries/<your-entry-id>.yaml
+# The filename (minus .yaml) MUST match the `id` below — that's how media in
+# public/media/<id>/ gets connected to this entry.
+#
+# Or just run:  npm run new-entry
+# Files starting with _ are ignored by the site and the validator.
+
+id: my-entry-id
+title: Human-readable name of the place
+
+coordinates:
+  # Google Maps: right-click the spot, then click the lat/lon to copy it.
+  lat: 0.0000
+  lon: 0.0000
+
+date: 2026-01-01 # YYYY-MM-DD, or YYYY-MM if you can't remember the day
+type: other # food drink lodging viewpoint nature hike beach museum
+  # landmark neighborhood shop event other
+
+description: >
+  What this place is. Factual, a few sentences.
+
+# --- everything below is optional --------------------------------------------
+
+opinion: >
+  What you actually thought of it. This is the point of the site.
+
+place:
+  city: ''
+  country: ''
+  country_code: '' # ISO 3166-1 alpha-2, uppercase, e.g. PT
+
+rating: 3 # 1-5
+tags: [] # lowercase, e.g. [cheap, crowded]
+
+# Files go in public/media/<id>/ and are listed here by filename only.
+media: []
+#  - file: 01-photo.jpg
+#    caption: Something about the photo.
+#  - youtube: VIDEO_ID     # for anything longer than a short clip
+
+links: []
+#  - label: OpenStreetMap
+#    url: https://www.openstreetmap.org/...

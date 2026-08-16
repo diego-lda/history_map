@@ -1,0 +1,32 @@
+id: lisbon-miradouro-santa-catarina
+title: Miradouro de Santa Catarina
+
+coordinates:
+  lat: 38.7089
+  lon: -9.1487
+
+date: 2024-06-14
+type: viewpoint
+
+description: >
+  A wide stone terrace above the Tagus, just west of Bairro Alto. There's a
+  kiosk selling beer and toasties, but most people bring their own and sit on
+  the wall. Buskers most evenings, and the statue of Adamastor at the far end.
+
+opinion: >
+  The best sunset in the city, and it costs nothing. Arrive about 45 minutes
+  early or you'll be standing at the back. Skip the kiosk queue — the crowd is
+  the whole show anyway.
+
+place:
+  city: Lisbon
+  country: Portugal
+  country_code: PT
+
+rating: 4
+tags: [sunset, free, crowded]
+
+media:
+  - file: 01-sunset.svg
+    caption: Looking west, about twenty minutes before sunset.
+    alt: Placeholder image — replace with your own photo.

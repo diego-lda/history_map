@@ -1,0 +1,32 @@
+id: oaxaca-mercado-20-de-noviembre
+title: Mercado 20 de Noviembre
+
+coordinates:
+  lat: 17.0592
+  lon: -96.7256
+
+date: 2023-11-08
+type: food
+
+description: >
+  A covered market a block south of the zócalo. The middle aisle is the pasillo
+  de humo — a corridor of charcoal grills where you buy meat by weight, then eat
+  it at communal tables with tortillas, salsa and grilled spring onions.
+
+opinion: >
+  Genuinely one of the best meals I've had anywhere, and it cost about six
+  dollars. The smoke is not an exaggeration; wear something you're willing to
+  wash. Point at what you want rather than trying to order in sentences.
+
+place:
+  city: Oaxaca de Juárez
+  country: Mexico
+  country_code: MX
+
+rating: 5
+tags: [market, cheap, smoky, lunch]
+
+media:
+  - file: 01-grill.svg
+    caption: The pasillo de humo at about one in the afternoon.
+    alt: Placeholder image — replace with your own photo.

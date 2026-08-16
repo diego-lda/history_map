@@ -1,0 +1,7 @@
+# Keep Dropbox out of directories that git and npm write to constantly.
+# Dropbox syncing these mid-write can corrupt them, and node_modules alone is
+# tens of thousands of files. GitHub is the backup for anything in here.
+node_modules
+dist
+.git
+.vite
