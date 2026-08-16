@@ -1,0 +1,34 @@
+id: stmalo-camping-citedalet
+title: Camping de la Cité d'Aleth
+
+coordinates:
+  lat: 48.6363609
+  lon: -2.0285768
+
+date: 2025-06-29
+type: lodging
+
+description: >
+  Este camping en St. Malo está situado justo en una punta del pueblo, muy cerca del Ferry. Desde ahí se puede ver la bahia y como entra y se va el ferry. Tiene muy buenas instalaciones y la verdad es que no es muy pesado, parece que estás en la naturaleza.
+
+opinion: >
+  Paramos en este camping antes de coger el ferry para ir de vuelta a Inglaterra cuando nos estabamos mudando a Girona. Estaba muy bien, y fué un lugar perfecto para parar antes de coger el ferry a la mañana siguiente.
+
+place:
+  city: Saint-Malo
+  country: France
+  country_code: FR
+
+rating: 3
+tags: [camping, sunset, coastal]
+
+media:
+  - file: 01-pitch.jpg
+    caption: Yo descansando antes de cenar
+    alt: A person resting against a tent beside a parked car at dusk.
+  - file: 02-sunset-dinner.jpg
+    caption: Imy, preparando comida en la puesta de sol.
+    alt: A campsite at sunset, someone preparing food on a blanket, tents and pines around.
+  - file: 03-dusk-harbour.jpg
+    caption: La puesta de sol, desde donde estabamos acampados.
+    alt: Pines silhouetted against a dusk sky, a campervan to the right and harbour lights beyond.
