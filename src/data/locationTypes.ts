@@ -8,7 +8,7 @@
  */
 export const LOCATION_TYPES = {
   food: { label: 'Food', color: '#E4572E', glyph: '🍽' },
-  drink: { label: 'Drink', color: '#B5179E', glyph: '🍸' },
+  drink: { label: 'Drink', color: '#B5179E', glyph: '☕' },
   lodging: { label: 'Lodging', color: '#7209B7', glyph: '🛏' },
   viewpoint: { label: 'Viewpoint', color: '#E8A33D', glyph: '🌅' },
   nature: { label: 'Nature', color: '#2A9D8F', glyph: '🌲' },
@@ -16,7 +16,7 @@ export const LOCATION_TYPES = {
   beach: { label: 'Beach', color: '#00B4D8', glyph: '🏖' },
   museum: { label: 'Museum', color: '#6A4C93', glyph: '🏛' },
   landmark: { label: 'Landmark', color: '#E63946', glyph: '🗿' },
-  neighborhood: { label: 'Neighborhood', color: '#F77F00', glyph: '🏘' },
+  village: { label: 'Village', color: '#F77F00', glyph: '🏘' },
   shop: { label: 'Shop', color: '#A4243B', glyph: '🛍' },
   event: { label: 'Event', color: '#3A86FF', glyph: '🎪' },
   other: { label: 'Other', color: '#6C757D', glyph: '📍' },

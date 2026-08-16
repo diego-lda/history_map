@@ -195,7 +195,7 @@ whether you actually keep this thing up.
 ### Location types (controlled vocabulary)
 
 `food` · `drink` · `lodging` · `viewpoint` · `nature` · `hike` · `beach` ·
-`museum` · `landmark` · `neighborhood` · `shop` · `event` · `other`
+`museum` · `landmark` · `village` · `shop` · `event` · `other`
 
 Each maps to a color and a small icon in one central `TYPES` table. Adding a type is a
 two-line change. Validation rejects unknown types — that's deliberate, so the legend

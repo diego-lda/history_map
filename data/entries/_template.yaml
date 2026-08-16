@@ -15,7 +15,7 @@ coordinates:
 
 date: 2026-01-01 # YYYY-MM-DD, or YYYY-MM if you can't remember the day
 type: other # food drink lodging viewpoint nature hike beach museum
-  # landmark neighborhood shop event other
+  # landmark village shop event other
 
 description: >
   What this place is. Factual, a few sentences.
