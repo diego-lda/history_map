@@ -127,6 +127,34 @@ body {
   z-index: 500;
 }
 
+/* -------------------------------------------------------------- clusters -- */
+
+.cluster-icon {
+  background: none;
+  border: 0;
+}
+
+.cluster {
+  width: var(--cluster-size);
+  height: var(--cluster-size);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  background: var(--accent);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.cluster:hover {
+  transform: scale(1.08);
+}
+
 /* --------------------------------------------------------------- filters -- */
 
 .filters {

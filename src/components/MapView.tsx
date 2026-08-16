@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
 import type { Entry } from '../data/schema.ts'
 import { typeInfo } from '../data/locationTypes.ts'
@@ -29,6 +30,21 @@ function pinIcon(entry: Entry, isSelected: boolean): L.DivIcon {
     html: `<div class="pin${isSelected ? ' pin--selected' : ''}" style="--pin-color:${color}"><span class="pin__glyph">${glyph}</span></div>`,
     iconSize: [32, 42],
     iconAnchor: [16, 42],
+  })
+}
+
+/**
+ * Clusters get a neutral badge rather than a type colour — a cluster usually
+ * spans several types, so colouring it by any one of them would lie.
+ */
+function createClusterIcon(cluster: { getChildCount: () => number }): L.DivIcon {
+  const count = cluster.getChildCount()
+  const size = count < 10 ? 34 : count < 100 ? 40 : 46
+
+  return L.divIcon({
+    className: 'cluster-icon',
+    html: `<div class="cluster" style="--cluster-size:${size}px">${count}</div>`,
+    iconSize: L.point(size, size),
   })
 }
 
@@ -164,7 +180,20 @@ export default function MapView(props: Props) {
         subdomains="abcd"
         maxZoom={19}
       />
-      {markers}
+      {/* maxClusterRadius is tighter than the 80px default: on a travel map two
+          towns half an hour apart are different places and should separate as
+          soon as the zoom can show both. */}
+      {/* maxClusterRadius is tighter than the 80px default: on a travel map two
+          towns half an hour apart are different places and should separate as
+          soon as the zoom can show both. */}
+      <MarkerClusterGroup
+        iconCreateFunction={createClusterIcon}
+        maxClusterRadius={45}
+        showCoverageOnHover={false}
+        spiderfyOnMaxZoom
+      >
+        {markers}
+      </MarkerClusterGroup>
       <MapController {...props} />
     </MapContainer>
   )
