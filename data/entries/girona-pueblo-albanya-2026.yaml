@@ -1,0 +1,28 @@
+id: girona-pueblo-albanya-2026
+title: Albanyà
+
+coordinates:
+  lat: 42.3060203
+  lon: 2.7160092
+
+date: 2026-08-15
+type: village
+
+description: >
+  Pueblo en la Alta Garrotxa, muy pintoresco. Tiene un casco antiguo y una parte más reciente. Su bandera es espectacular. El rio La Muga es muy bonito, con acceso facil. Subiendo por el puente y luego tomando un sendero a la derecha, se puede bajar a unas pozas muy bonitas. En el pueblo hay un par de cafes, en el de la plaza al lado de la iglesia, junto a una fuente se come bien.
+
+opinion: >
+  Fuimos el sabado 15 de agosto, el día del cumpleaños de Imy. Dimos un paseo muy bonito, por el rio. Nadamos bastante y disfrutamos de las pequeñas cascadas. Frida se atrevió a nadar por primera vez. Luego comimos muy bien y disfrutamos de un café antes de que empezara una tormenta.
+
+place:
+  city: Albanyà
+  country: Spain
+  country_code: ES
+
+# rating: 4
+# tags: [river, swimming, quiet]
+
+media:
+  - file: 01-river-valley.jpg
+    caption: The river next the village, looking from the bridge just past the village. 
+    alt: A shallow river running through a densely wooded valley, with a forested ridge behind.
