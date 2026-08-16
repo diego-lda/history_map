@@ -98,11 +98,20 @@ body {
 }
 
 .pin__glyph {
+  /* Emoji are colour bitmaps, so they can't be recoloured with `color`. The
+     previous attempt — saturate(0) brightness(6) to force them white — flattened
+     any glyph with large filled areas into a white block (🌅 was a solid
+     square). So instead the emoji keeps its own colours on a white disc, and the
+     type colour reads from the ring around it. */
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
   transform: rotate(45deg);
-  font-size: 15px;
+  font-size: 12px;
   line-height: 1;
-  /* Colour emoji ignore text colour; the white pin fill supplies contrast. */
-  filter: saturate(0) brightness(6);
+  background: #fff;
+  border-radius: 50%;
 }
 
 .pin:hover {
@@ -413,8 +422,16 @@ body {
 }
 
 .media__item {
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  /* Each photo keeps its own proportions. A fixed 4:3 with object-fit: cover
+     silently centre-cropped anything portrait — the Albanyà shot lost the ridge
+     along the top. */
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  /* Without a cap, a tall phone photo fills the whole panel and you scroll past
+     a single image. Only bites on unusually tall shots. */
+  max-height: 70vh;
+  margin-inline: auto;
 }
 
 .media__frame {
