@@ -1,0 +1,141 @@
+# Decap CMS — the browser-based editor at /admin/.
+#
+# This is a second way into the same data the repo already stores by hand:
+# every save is an ordinary git commit of data/entries/<id>.yaml plus photos
+# in public/media/<id>/. The site itself stays static; the CMS talks to the
+# GitHub API, not to a server of ours.
+
+backend:
+  name: github
+  repo: diego-lda/history_map
+  branch: main
+  # GitHub's OAuth flow needs a client secret, which cannot live in a public
+  # page — so it is exchanged by a tiny proxy you host. See
+  # tools/decap-oauth-worker/README.md. Replace this with your worker URL.
+  base_url: https://REPLACE-ME.workers.dev
+  auth_endpoint: auth
+  commit_messages:
+    create: 'Add {{collection}} {{slug}}'
+    update: 'Update {{collection}} {{slug}}'
+    delete: 'Remove {{collection}} {{slug}}'
+    uploadMedia: 'Add photo {{path}}'
+    deleteMedia: 'Remove photo {{path}}'
+
+# `npx decap-server` + this flag lets the CMS write to the working copy
+# instead of GitHub, so the editor can be tried without any OAuth setup.
+local_backend: true
+
+# Only a fallback. The entries collection overrides both per entry below.
+media_folder: public/media
+public_folder: /history_map/media
+
+collections:
+  - name: entries
+    label: Places
+    label_singular: Place
+    folder: data/entries
+    extension: yaml
+    format: yaml
+    create: true
+    # The filename IS the entry ID — the convention the whole repo depends on,
+    # since it is what connects an entry to its photo folder.
+    slug: '{{fields.id}}'
+    identifier_field: title
+    summary: '{{title}} — {{place.city}}'
+    sortable_fields: ['date', 'title', 'rating']
+
+    # Template-expanded per entry, keeping one photo folder per entry ID.
+    media_folder: '/public/media/{{fields.id}}'
+    public_folder: '/history_map/media/{{fields.id}}'
+
+    fields:
+      - name: id
+        label: Entry ID (becomes the filename and the photo folder)
+        widget: string
+        pattern:
+          ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Lowercase letters, numbers and hyphens only']
+
+      - name: title
+        label: Title
+        widget: string
+
+      - name: coordinates
+        label: Coordinates
+        widget: object
+        fields:
+          - { name: lat, label: Latitude, widget: number, value_type: float, min: -90, max: 90 }
+          - { name: lon, label: Longitude, widget: number, value_type: float, min: -180, max: 180 }
+
+      - name: date
+        label: Date of visit
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        picker_utc: true
+
+      - name: type
+        label: Type
+        widget: select
+        default: other
+        options:
+          - { label: '🍽 Food', value: food }
+          - { label: '☕ Drink', value: drink }
+          - { label: '🛏 Lodging', value: lodging }
+          - { label: '🌅 Viewpoint', value: viewpoint }
+          - { label: '🌲 Nature', value: nature }
+          - { label: '🥾 Hike', value: hike }
+          - { label: '🏖 Beach', value: beach }
+          - { label: '🏛 Museum', value: museum }
+          - { label: '🗿 Landmark', value: landmark }
+          - { label: '🏘 Village', value: village }
+          - { label: '🛍 Shop', value: shop }
+          - { label: '🎪 Event', value: event }
+          - { label: '📍 Other', value: other }
+
+      - name: description
+        label: Description (what the place is)
+        widget: text
+
+      - name: opinion
+        label: Opinion (what you thought)
+        widget: text
+        required: false
+
+      - name: place
+        label: Place
+        widget: object
+        required: false
+        collapsed: false
+        fields:
+          - { name: city, label: City, widget: string, required: false }
+          - { name: country, label: Country, widget: string, required: false }
+          - name: country_code
+            label: Country code (ISO alpha-2, uppercase)
+            widget: string
+            required: false
+            pattern: ['^$|^[A-Z]{2}$', 'Two uppercase letters, e.g. ES']
+
+      - name: rating
+        label: Rating (1–5)
+        widget: number
+        required: false
+        value_type: int
+        min: 1
+        max: 5
+
+      - name: tags
+        label: Tags
+        widget: list
+        required: false
+        field: { name: tag, label: Tag, widget: string }
+
+      - name: media
+        label: Photos
+        widget: list
+        required: false
+        max: 5
+        summary: '{{fields.caption}}'
+        fields:
+          - { name: file, label: Photo, widget: image, choose_url: false }
+          - { name: caption, label: Caption, widget: string, required: false }
+          - { name: alt, label: Alt text, widget: string, required: false }

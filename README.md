@@ -30,14 +30,23 @@ Then:
 3. `npm run validate`
 4. Commit and push. Live in about a minute.
 
-`data/entries/_template.yaml` documents every field if you'd rather copy a file
+`data/entry-template.yaml` documents every field if you'd rather copy a file
 by hand.
 
-### Before committing photos
+### Photos
 
-Resize to roughly 1600px on the long edge and **strip EXIF** — phone photos
-carry GPS coordinates and timestamps, which will publish an exact location even
-when the entry itself is deliberately vague.
+Both authoring paths cap photos at 1600px on the long edge:
+
+- the dev form resizes on upload, and re-encoding strips EXIF (including GPS)
+- the CMS commits uploads untouched, so CI resizes them on push and commits the
+  result back
+
+`npm run media:optimize` does the same locally; add `-- --check` to report
+without changing anything.
+
+**One gap worth knowing:** a photo already under 1600px is left alone, so it
+keeps its EXIF. If it came straight off a phone via the CMS, that includes GPS
+coordinates — in a public repo.
 
 Don't commit raw video. Git keeps every version of a binary forever and GitHub
 caps files at 100MB. Short clips (a few seconds, under ~10MB) are fine as
@@ -96,3 +105,31 @@ up to five photos — resized to 1600px and re-encoded, which strips EXIF
 
 The form exists only in development. The deployed site is static and has no
 write path, so the button and its endpoint are absent from the production build.
+
+## Adding an entry from a browser (anywhere)
+
+`https://diego-lda.github.io/history_map/admin/` is a Decap CMS editor. Sign in
+with GitHub and each save is an ordinary commit — `data/entries/<id>.yaml` plus
+photos in `public/media/<id>/` — which triggers the usual deploy.
+
+It needs a one-time OAuth proxy; see
+[tools/decap-oauth-worker/README.md](tools/decap-oauth-worker/README.md).
+
+### Trying the CMS locally, without any of that
+
+```bash
+npm run cms   # in one terminal
+npm run dev   # in another
+```
+
+Then open http://localhost:5173/history_map/admin/. `local_backend: true` makes
+the CMS write to your working copy instead of GitHub, so you can see exactly
+what it produces before wiring up OAuth.
+
+### Which tool to use
+
+| | Best for |
+|---|---|
+| `+ Add entry` (dev form) | At your laptop. Fastest, strips EXIF, accepts decimal commas. |
+| `/admin/` (Decap) | Away from your laptop, phone included. Commits straight to GitHub. |
+| Editing YAML by hand | Fixing or rewording an existing entry. |

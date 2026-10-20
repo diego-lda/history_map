@@ -1,0 +1,11 @@
+name = "history-map-cms-auth"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# The site allowed to receive the token. Change if you move to a custom domain.
+ALLOWED_ORIGIN = "https://diego-lda.github.io"
+
+# GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are secrets, never put them here:
+#   npx wrangler secret put GITHUB_CLIENT_ID
+#   npx wrangler secret put GITHUB_CLIENT_SECRET

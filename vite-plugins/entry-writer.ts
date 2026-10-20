@@ -8,7 +8,8 @@ import { Scalar } from 'yaml'
 import { EntrySchema } from '../src/data/schema.ts'
 
 /**
- * Dev-only write path for the "Add entry" form.
+ * Dev-only server behaviour: the write path for the "Add entry" form, plus a
+ * rewrite so /admin/ reaches the CMS page the way a static host would.
  *
  * The published site is static and has no backend, so this endpoint exists only
  * under `npm run dev`. It writes the same files you would otherwise create by
@@ -101,6 +102,19 @@ export function entryWriter(): Plugin {
 
 
     configureServer(server) {
+      // A static host resolves /admin/ to /admin/index.html; Vite's dev server
+      // hands directory requests to the SPA fallback instead, so the CMS URL
+      // silently renders the map. Rewrite it so the same URL works in both.
+      server.middlewares.use((req, _res, next) => {
+        if (req.url) {
+          const [path, query = ''] = req.url.split('?')
+          if (/\/admin\/?$/.test(path)) {
+            req.url = `${path.replace(/\/?$/, '')}/index.html${query ? `?${query}` : ''}`
+          }
+        }
+        next()
+      })
+
       server.middlewares.use('/__add-entry', async (req, res) => {
         const send = (status: number, payload: unknown) => {
           res.statusCode = status

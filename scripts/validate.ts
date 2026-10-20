@@ -15,10 +15,13 @@ import { dirname, join, resolve } from 'node:path'
 import { parse } from 'yaml'
 import { EntrySchema } from '../src/data/schema.ts'
 import { isLocalMedia } from '../src/data/schema.ts'
+import { LOCATION_TYPE_KEYS } from '../src/data/locationTypes.ts'
+import { isExternalMedia, mediaRepoPath } from '../src/data/media.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const entriesDir = join(root, 'data', 'entries')
-const mediaDir = join(root, 'public', 'media')
+const publicDir = join(root, 'public')
+const mediaDir = join(publicDir, 'media')
 
 const errors: string[] = []
 const warnings: string[] = []
@@ -71,11 +74,44 @@ for (const file of files) {
   seenIds.set(entry.id, file)
 
   for (const item of entry.media ?? []) {
-    if (!isLocalMedia(item)) continue
+    if (!isLocalMedia(item) || isExternalMedia(item.file)) continue
     referencedFolders.add(entry.id)
-    const path = join(mediaDir, entry.id, item.file)
-    if (!existsSync(path)) {
-      error(file, `media "${item.file}" not found at public/media/${entry.id}/${item.file}`)
+
+    // Resolved the same way the app resolves it, so a file the site can render
+    // is never reported missing, and vice versa.
+    const relative = mediaRepoPath(entry.id, item.file)
+    if (!existsSync(join(publicDir, relative))) {
+      error(file, `media "${item.file}" not found at public/${relative}`)
+    }
+  }
+}
+
+// The CMS config repeats the type vocabulary, because Decap reads a YAML file
+// and cannot import the TypeScript table. That duplication is the one thing
+// that can silently drift, so it is checked rather than trusted: adding a type
+// to locationTypes.ts and forgetting the CMS would otherwise leave a type you
+// can author by hand but not from the browser.
+const cmsConfigPath = join(root, 'public', 'admin', 'config.yml')
+if (existsSync(cmsConfigPath)) {
+  const cms = parse(await readFile(cmsConfigPath, 'utf8')) as {
+    collections?: { name: string; fields?: { name: string; options?: { value: string }[] }[] }[]
+  }
+  const typeField = cms.collections
+    ?.find((c) => c.name === 'entries')
+    ?.fields?.find((f) => f.name === 'type')
+
+  if (!typeField?.options) {
+    warn('public/admin/config.yml has no entries.type options to check')
+  } else {
+    const inCms = typeField.options.map((o) => o.value)
+    const missing = LOCATION_TYPE_KEYS.filter((t) => !inCms.includes(t))
+    const extra = inCms.filter((t) => !(LOCATION_TYPE_KEYS as readonly string[]).includes(t))
+
+    if (missing.length > 0) {
+      error('public/admin/config.yml', `is missing type(s): ${missing.join(', ')}`)
+    }
+    if (extra.length > 0) {
+      error('public/admin/config.yml', `has unknown type(s): ${extra.join(', ')}`)
     }
   }
 }

@@ -9,6 +9,14 @@ import { LOCATION_TYPE_KEYS } from './locationTypes.ts'
  * before the site is allowed to build.
  */
 
+/**
+ * A CMS writes `''` for a field the author left blank, where a hand-written
+ * file would simply omit the key. Treat the two as the same thing so an
+ * optional field stays genuinely optional from both directions.
+ */
+const blankAsAbsent = <T extends z.ZodTypeAny>(schema: T) =>
+  z.preprocess((value) => (value === '' || value === null ? undefined : value), schema.optional())
+
 const slug = z
   .string()
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'must be lowercase kebab-case (a-z, 0-9, hyphens)')
@@ -59,18 +67,17 @@ export const EntrySchema = z.object({
   type: z.enum(LOCATION_TYPE_KEYS),
   description: z.string().min(1),
 
-  opinion: z.string().optional(),
-  place: z
-    .object({
-      city: z.string().optional(),
-      country: z.string().optional(),
-      country_code: z
-        .string()
-        .regex(/^[A-Z]{2}$/, 'must be an uppercase ISO 3166-1 alpha-2 code')
-        .optional(),
-    })
-    .optional(),
-  rating: z.number().int().min(1).max(5).optional(),
+  opinion: blankAsAbsent(z.string()),
+  place: blankAsAbsent(
+    z.object({
+      city: blankAsAbsent(z.string()),
+      country: blankAsAbsent(z.string()),
+      country_code: blankAsAbsent(
+        z.string().regex(/^[A-Z]{2}$/, 'must be an uppercase ISO 3166-1 alpha-2 code'),
+      ),
+    }),
+  ),
+  rating: blankAsAbsent(z.number().int().min(1).max(5)),
   tags: z.array(z.string().regex(/^[a-z0-9-]+$/, 'must be lowercase')).optional(),
   media: z.array(MediaSchema).optional(),
   links: z.array(z.object({ label: z.string().min(1), url: z.url() })).optional(),

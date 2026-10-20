@@ -24,7 +24,10 @@ export function loadEntries(): Entry[] {
 
   for (const [path, raw] of Object.entries(files)) {
     const id = idFromPath(path)
-    if (id.startsWith('_')) continue // _template.yaml and friends
+    // Belt and braces: data/entries/ should contain only entries now that the
+    // template lives at data/entry-template.yaml, but a stray _draft.yaml
+    // shouldn't become a pin.
+    if (id.startsWith('_')) continue
 
     const result = EntrySchema.safeParse(parse(raw))
     if (!result.success) {

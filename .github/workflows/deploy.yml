@@ -7,7 +7,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  # contents: write so the cap-photos step can push a follow-up commit when an
+  # upload from the CMS exceeds 1600px.
+  contents: write
   pages: write
   id-token: write
 
@@ -28,6 +30,31 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # Decap commits uploads to GitHub untouched, so a photo added from a
+      # phone arrives at full resolution. Cap it here — the one point both
+      # authoring paths pass through. The script is a no-op when everything is
+      # already within the cap, so this cannot loop: the commit it pushes
+      # triggers one more run that finds nothing to do.
+      - name: Cap photos at 1600px
+        run: |
+          # The script uses sips on macOS and ImageMagick elsewhere; don't
+          # assume the runner image ships it.
+          if ! command -v magick >/dev/null && ! command -v convert >/dev/null; then
+            sudo apt-get update -qq && sudo apt-get install -y -qq imagemagick
+          fi
+
+          npm run media:optimize
+
+          if [ -n "$(git status --porcelain public/media)" ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/media
+            git commit -m "Resize photos to 1600px"
+            git push
+          else
+            echo "All photos already within the cap."
+          fi
 
       # `npm run build` runs validate + typecheck first, so a bad entry fails
       # here rather than shipping a broken pin.

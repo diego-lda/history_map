@@ -330,7 +330,7 @@ debug, and everything after that is just editing a working thing.
 
 The thing to optimize. Adding an entry should be:
 
-1. `cp data/entries/_template.yaml data/entries/my-new-place.yaml`
+1. `cp data/entry-template.yaml data/entries/my-new-place.yaml`
 2. Fill it in. Get coordinates by right-clicking in Google Maps → click the lat/lon to
    copy.
 3. `mkdir public/media/my-new-place` and drop photos in.

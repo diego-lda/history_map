@@ -1,4 +1,7 @@
 # Copy this file to data/entries/<your-entry-id>.yaml
+#
+# It lives OUTSIDE data/entries/ on purpose: that folder is a CMS collection,
+# and anything inside it shows up as an editable entry.
 # The filename (minus .yaml) MUST match the `id` below — that's how media in
 # public/media/<id>/ gets connected to this entry.
 #
