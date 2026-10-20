@@ -174,15 +174,16 @@ export default function MapView(props: Props) {
       zoomControl={false}
       attributionControl
     >
+      {/* OSM's own tiles: no API key, no account, no billing. CARTO's Positron
+          was here first and looked better, but in 2026 it started returning an
+          "API KEY REQUIRED" watermark tile — with HTTP 200, so nothing errored,
+          the map just silently turned into watermarks. Any replacement must be
+          checked by looking at a tile, not at a status code. */}
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        subdomains="abcd"
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         maxZoom={19}
       />
-      {/* maxClusterRadius is tighter than the 80px default: on a travel map two
-          towns half an hour apart are different places and should separate as
-          soon as the zoom can show both. */}
       {/* maxClusterRadius is tighter than the 80px default: on a travel map two
           towns half an hour apart are different places and should separate as
           soon as the zoom can show both. */}

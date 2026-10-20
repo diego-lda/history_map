@@ -37,7 +37,7 @@ it free, fast, and essentially unbreakable.
 |---|---|---|
 | Framework | **React + TypeScript, built with Vite** | You know React. Vite's dev server is instant and its static build is exactly what a Pages host wants. TS pays for itself here because the entry schema is the whole app. |
 | Map | **Leaflet**, via **react-leaflet** | Mature, small, no API key, no account, no billing. Touch/pinch works out of the box. |
-| Basemap tiles | **CARTO Positron** (light) / **Dark Matter** (dark), OSM data | Free for low-volume personal use with attribution, and visually quiet — muted greys let colored pins carry the visual weight. Swappable in one line. |
+| Basemap tiles | **OpenStreetMap standard** (`tile.openstreetmap.org`) | No API key, no account, no billing — served by the OSM Foundation itself, so there is no vendor who can decide to start charging. Swappable in one line. |
 | Clustering | **react-leaflet-cluster** | Needed the moment you have >30 pins in one city. |
 | Data format | **YAML, one file per entry** | Comfortable for multi-line prose (descriptions, opinions) in a way JSON is not. One file per entry means adding an entry is a new file, never a merge conflict. |
 | Validation | **Zod** schema + a `npm run validate` script | A typo in a lat/lon or a missing photo fails the build with a clear message, instead of silently producing a broken pin. |
@@ -48,6 +48,12 @@ it free, fast, and essentially unbreakable.
 - *MapLibre GL + vector tiles* — better looking, smoother zoom, but essentially every
   good vector tile source wants an account and an API key, and keys can't be kept
   secret in a static site. Revisit only if the raster basemap starts feeling dated.
+- *CARTO Positron* — this **was** the basemap, chosen for its muted greys. In 2026
+  CARTO began requiring an API key, and started serving an "API KEY REQUIRED"
+  watermark tile **with HTTP 200**. Nothing errored; the map just quietly filled
+  with watermarks. Two lessons worth keeping: prefer a tile source with no vendor
+  who can gate it later, and verify a basemap by *looking at a tile*, never by its
+  status code.
 - *Google Maps* — requires a billing-enabled API key. Overkill and a liability for a
   personal journal.
 - *Next.js / Astro* — nothing here needs SSR, routing, or islands. Vite + React is
@@ -284,7 +290,7 @@ bottom-left.
 │        ●                             │  ─────────    │
 │                    ●                 │  description  │
 │                                      │  opinion      │
-│ legend                    © CARTO/OSM│               │
+│ legend                         © OSM │               │
 └──────────────────────────────────────┴───────────────┘
 ```
 
