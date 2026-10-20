@@ -42,14 +42,20 @@ exactly — no trailing slash, and https.
 
 Keep the **Client ID**, then generate a **Client secret**.
 
-**3. Give the worker its secrets**
+**3. Give the worker its credentials**
+
+The **Client ID** goes in `wrangler.toml` under `[vars]` — it is public by
+design, since GitHub puts it in the authorize URL every user sees.
+
+The **Client secret** is the actual credential, and is set out of band so it
+never reaches your shell history or git:
 
 ```bash
-npx wrangler secret put GITHUB_CLIENT_ID
 npx wrangler secret put GITHUB_CLIENT_SECRET
+npx wrangler deploy
 ```
 
-Both are prompted for, so they never reach your shell history or git.
+It is prompted for, and Cloudflare stores it encrypted.
 
 **4. Point the CMS at the worker**
 

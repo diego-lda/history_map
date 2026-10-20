@@ -6,6 +6,10 @@ compatibility_date = "2026-01-01"
 # The site allowed to receive the token. Change if you move to a custom domain.
 ALLOWED_ORIGIN = "https://diego-lda.github.io"
 
-# GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are secrets, never put them here:
-#   npx wrangler secret put GITHUB_CLIENT_ID
+# Public by design — GitHub puts the client id in the authorize URL that every
+# user sees, so it is configuration, not a credential.
+GITHUB_CLIENT_ID = "Ov23licPie2201HjP7G1"
+
+# The client SECRET is the credential. Never put it here; it is set out of band
+# and stored encrypted by Cloudflare:
 #   npx wrangler secret put GITHUB_CLIENT_SECRET
