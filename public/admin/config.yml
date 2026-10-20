@@ -12,7 +12,7 @@ backend:
   # GitHub's OAuth flow needs a client secret, which cannot live in a public
   # page — so it is exchanged by a tiny proxy you host. See
   # tools/decap-oauth-worker/README.md. Replace this with your worker URL.
-  base_url: https://REPLACE-ME.workers.dev
+  base_url: https://history-map-cms-auth.history-map-diego.workers.dev
   auth_endpoint: auth
   commit_messages:
     create: 'Add {{collection}} {{slug}}'
