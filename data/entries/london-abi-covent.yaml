@@ -1,0 +1,17 @@
+id: london-abi-covent
+title: Coffee Spot with Abi
+coordinates:
+  lat: 51.511899
+  lon: -0.125369
+date: 2026-09-01
+type: drink
+description: This was a nice coffee Spot in Covent Garden called DA bakery.
+opinion: Immy and I went here with her friend Abi for a coffee and something to
+  eat. I had an aubergine pastry that was incredible.
+place:
+  city: London
+  country: England
+rating: 3
+media:
+  - file: /history_map/media/london-abi-covent/051b6c2a-e333-49bb-860b-b601f0f64f7a-1_all_42675.jpg
+    caption: The coffee and aubergine pan au chocolate that I had.
