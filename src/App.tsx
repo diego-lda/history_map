@@ -6,12 +6,14 @@ import EntryPanel from './components/EntryPanel.tsx'
 import FilterBar from './components/FilterBar.tsx'
 import Legend from './components/Legend.tsx'
 import { useSelectedEntry } from './hooks/useSelectedEntry.ts'
+import AddEntryForm from './components/AddEntryForm.tsx'
 
 export default function App() {
   const entries = useMemo(() => loadEntries(), [])
   const [selectedId, setSelectedId] = useSelectedEntry()
   const [activeTypes, setActiveTypes] = useState<Set<LocationType>>(new Set())
   const [query, setQuery] = useState('')
+  const [addingEntry, setAddingEntry] = useState(false)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -72,6 +74,18 @@ export default function App() {
       <Legend entries={entries} />
 
       <EntryPanel entry={selected} onClose={() => setSelectedId(null)} />
+
+      {/* Authoring only. The published site is static with no write path, so
+          this never ships — import.meta.env.DEV is statically false in the
+          production build and the form is tree-shaken out entirely. */}
+      {import.meta.env.DEV && !addingEntry && (
+        <button className="add-entry" type="button" onClick={() => setAddingEntry(true)}>
+          + Add entry
+        </button>
+      )}
+      {import.meta.env.DEV && addingEntry && (
+        <AddEntryForm onClose={() => setAddingEntry(false)} />
+      )}
     </div>
   )
 }

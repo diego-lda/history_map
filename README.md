@@ -86,3 +86,13 @@ This repo is public, so everything committed is published the moment it's
 pushed — there's no draft state. Keep work-in-progress on a branch. And think
 before pinning somewhere residential; a dated map of where you've been is a
 movement history.
+
+## Adding an entry from the browser (local only)
+
+`npm run dev` renders an **+ Add entry** button. It writes
+`data/entries/<id>.yaml` and `public/media/<id>/` straight into the repo, with
+up to five photos — resized to 1600px and re-encoded, which strips EXIF
+(including GPS). Review the result, then commit and push as usual.
+
+The form exists only in development. The deployed site is static and has no
+write path, so the button and its endpoint are absent from the production build.
