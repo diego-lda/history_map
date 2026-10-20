@@ -75,14 +75,27 @@ export default function App() {
 
       <EntryPanel entry={selected} onClose={() => setSelectedId(null)} />
 
-      {/* Authoring only. The published site is static with no write path, so
-          this never ships — import.meta.env.DEV is statically false in the
-          production build and the form is tree-shaken out entirely. */}
-      {import.meta.env.DEV && !addingEntry && (
-        <button className="add-entry" type="button" onClick={() => setAddingEntry(true)}>
+      <div className="site-actions">
+        {/* Ships to the public site: the CMS is a separate page that signs you
+            in with GitHub, so the link is safe to show to anyone — it leads to
+            a login, not to a write path. */}
+        <a className="add-entry" href={`${import.meta.env.BASE_URL}admin/`}>
           + Add entry
-        </button>
-      )}
+        </a>
+
+        {/* Dev only, and tree-shaken out of the production build: writes
+            straight to the working copy, no commit and no login. */}
+        {import.meta.env.DEV && !addingEntry && (
+          <button
+            className="add-entry add-entry--local"
+            type="button"
+            onClick={() => setAddingEntry(true)}
+          >
+            + Add locally
+          </button>
+        )}
+      </div>
+
       {import.meta.env.DEV && addingEntry && (
         <AddEntryForm onClose={() => setAddingEntry(false)} />
       )}
