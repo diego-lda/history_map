@@ -106,7 +106,13 @@ function MapController({ entries, selected, onSelect, panelOpen }: Props) {
     const bounds = L.latLngBounds(entries.map((e) => [e.coordinates.lat, e.coordinates.lon]))
 
     return whenMeasured(map, () => {
-      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 12 })
+      // animate: false is load-bearing, not cosmetic. An animated fit only
+      // commits the new view when the zoom animation finishes, and if frames
+      // are throttled — a backgrounded tab, a slow phone — it never does. The
+      // map then sits silently at the default world zoom with every pin merged
+      // into one cluster, which reads as "my entry is missing". There is also
+      // nothing to animate from on first paint.
+      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 12, animate: false })
       hasFitInitialBounds.current = true
     })
   }, [entries, map, selected])

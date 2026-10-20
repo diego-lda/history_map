@@ -26,22 +26,34 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const mediaDir = join(root, 'public', 'media')
 const checkOnly = process.argv.includes('--check')
 
-/** macOS has sips; Linux CI runners have ImageMagick. Use whichever exists. */
-function detectTool(): 'sips' | 'magick' | 'convert' | null {
-  for (const tool of ['sips', 'magick', 'convert'] as const) {
-    try {
-      execFileSync('which', [tool], { stdio: 'ignore' })
-      return tool
-    } catch {
-      /* keep looking */
-    }
+type Toolkit = 'sips' | 'magick' | 'im6'
+
+function has(binary: string): boolean {
+  try {
+    execFileSync('which', [binary], { stdio: 'ignore' })
+    return true
+  } catch {
+    return false
   }
+}
+
+/**
+ * macOS has sips. Linux has ImageMagick, in two incompatible shapes:
+ * v7 exposes one `magick` binary with subcommands, v6 exposes separate
+ * `identify` and `convert`. Treating v6's `convert` as if it took an
+ * `identify` subcommand made every probe fail silently, so the CI step
+ * reported success while resizing nothing.
+ */
+function detectToolkit(): Toolkit | null {
+  if (has('sips')) return 'sips'
+  if (has('magick')) return 'magick'
+  if (has('identify') && has('convert')) return 'im6'
   return null
 }
 
-function dimensions(tool: string, path: string): [number, number] | null {
+function dimensions(toolkit: Toolkit, path: string): [number, number] | null {
   try {
-    if (tool === 'sips') {
+    if (toolkit === 'sips') {
       const out = execFileSync('sips', ['-g', 'pixelWidth', '-g', 'pixelHeight', path], {
         encoding: 'utf8',
       })
@@ -49,23 +61,33 @@ function dimensions(tool: string, path: string): [number, number] | null {
       const h = Number(out.match(/pixelHeight:\s*(\d+)/)?.[1])
       return w && h ? [w, h] : null
     }
-    const out = execFileSync(tool, ['identify', '-format', '%w %h', path], { encoding: 'utf8' })
+
+    // `magick identify …` on v7, the standalone `identify` on v6.
+    const [bin, args] =
+      toolkit === 'magick'
+        ? ['magick', ['identify', '-format', '%w %h', path]]
+        : ['identify', ['-format', '%w %h', path]]
+
+    const out = execFileSync(bin as string, args as string[], { encoding: 'utf8' })
     const [w, h] = out.trim().split(/\s+/).map(Number)
     return w && h ? [w, h] : null
-  } catch {
+  } catch (error) {
+    // Loudly: a silent probe failure is what hid this bug in CI.
+    console.error(`  ! could not read dimensions of ${path}: ${(error as Error).message}`)
     return null
   }
 }
 
-function resize(tool: string, path: string): void {
-  if (tool === 'sips') {
+function resize(toolkit: Toolkit, path: string): void {
+  if (toolkit === 'sips') {
     execFileSync('sips', ['-Z', String(LONG_EDGE), path, '--out', path], { stdio: 'ignore' })
-  } else {
-    // `>` means "only shrink", belt and braces alongside the check below.
-    execFileSync(tool, [path, '-resize', `${LONG_EDGE}x${LONG_EDGE}>`, '-strip', path], {
-      stdio: 'ignore',
-    })
+    return
   }
+  // `>` means "only shrink", belt and braces alongside the caller's check.
+  const bin = toolkit === 'magick' ? 'magick' : 'convert'
+  execFileSync(bin, [path, '-resize', `${LONG_EDGE}x${LONG_EDGE}>`, '-strip', path], {
+    stdio: 'ignore',
+  })
 }
 
 function* walk(dir: string): Generator<string> {
@@ -83,11 +105,12 @@ function* walk(dir: string): Generator<string> {
   }
 }
 
-const tool = detectTool()
+const tool = detectToolkit()
 if (!tool) {
-  console.error('No image tool found (looked for sips, magick, convert).')
+  console.error('No image toolkit found (looked for sips, magick, identify+convert).')
   process.exit(1)
 }
+console.log(`Using ${tool}.`)
 
 const oversized: string[] = []
 
